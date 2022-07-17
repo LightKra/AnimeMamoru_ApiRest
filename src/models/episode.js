@@ -1,13 +1,19 @@
 const mongooseSchema = require('mongoose');
 const episodeSchema = new mongooseSchema.Schema({
-    "espisodeRef": {
+    "espisode_ref": {
         "type": mongooseSchema.Schema.Types.ObjectId,
         "ref": "season_ref"
     },
-    "title": String,
+    "title": {
+        "type": String,
+        "required": true
+    },
     "description": String,
     "ratings": Number,
-    "poster_path": String,
+    "poster_path": {
+        "type": String,
+        "required": true
+    },
     "url_play": {
       "mega": String,
       "fembed": String,
@@ -19,11 +25,10 @@ const episodeSchema = new mongooseSchema.Schema({
         "google_drive": String,
         "zippyshare": String,
         "icloud_drive": String
-    },
-    "created": {
-        "type":Date,
-        "default": Date.now     
     }
+},{
+    "timestamps": true,
+    "versionKey": false
 });
 const episode = mongooseSchema.model('episode',episodeSchema);
 module.exports = {episode}

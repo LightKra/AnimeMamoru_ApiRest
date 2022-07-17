@@ -1,17 +1,26 @@
 const mongooseSchema = require('mongoose');
 const seasonSchema = new mongooseSchema.Schema({
-    "title": String,
+    "title": {
+        "type": String,
+        "required": true
+    },
     "description": String,
-    "Number_Episodes": Number,
+    "number_episodes": Number,
     "date": String,
     "genres": [],
     "ratings": Number,
     "lenguages": [],
-    "poster_path": String,
+    "poster_path": {
+        "type": String,
+        "required": true
+    },
     "created": {
         "type": Date,
         "default": Date.now
     }
+},{
+    "timestamps": true,
+    "versionKey": false
 });
 const season = mongooseSchema.model('season',seasonSchema);
 module.exports = {season}
