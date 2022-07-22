@@ -1,5 +1,5 @@
 const {season} = require('../models/season');
-
+const {messageResult, messageResultJson} = require('../libs/functions')
 const createSeason = async (req, res) => {
     const {title,
     description,
@@ -9,20 +9,20 @@ const createSeason = async (req, res) => {
     ratings,
     lenguages,
     poster_path} = req.body;
-    season.find({title},(error, docs)=>{
-        if(docs.length){
-            console.log("Season name already exists");
-            return
-        }
-    })    
-    const newSeason = new season({title, description, number_Episodes, date,
-    genres, ratings, lenguages, poster_path
-    })
-    await newSeason.save();
-    console.log("saved Season");
-    res.status(201).json({"saved Season": true});
+    const seasonResult = await season.find({title});
+    const size = Object.keys(seasonResult).length;
+    if(size>0){
+        messageResult(res, 201, "season already exists");
+    }else{
+        const newSeason = new season({title, description, number_Episodes, date,
+        genres, ratings, lenguages, poster_path
+        })
+        await newSeason.save();
+        messageResult(res, 201, "saved Season");
+    }
+    
 }
-const updateSeason = async (req, res)=>{
+const updateSeasonById = async (req, res)=>{
     const {title,
         description,
         number_episodes,
@@ -34,11 +34,21 @@ const updateSeason = async (req, res)=>{
     const _id = req.params.id;
     await season.findByIdAndUpdate(_id,{title, description, number_episodes, 
         date, genres, ratings,lenguages, poster_path});
-    res.status(201).json({"update Season": true});
+    messageResult(res, 201, "update Season");
 }
-const searchSeason = async (req, res)=>{
+const searchSeasonById = async (req, res)=>{
     const _id = req.params.id;
-    const search = season.find({_id});
-    res.status(201).json(search);
+    const search = await season.find({_id});
+    messageResultJson(res, search);
 }
-module.exports = {createSeason, updateSeason, searchSeason}
+const searchSeasonAll = async (req, res)=>{
+    const searchAll = await season.find({});
+    messageResultJson(res, searchAll);
+}
+
+const deleteSeasonById = async (req, res)=>{
+    const _id = req.params.id;
+    await season.findByIdAndDelete(_id);
+    messageResult(res, 201, "Delete Season id=" + _id);
+}
+module.exports = {createSeason, updateSeasonById, searchSeasonById, searchSeasonAll, deleteSeasonById}
