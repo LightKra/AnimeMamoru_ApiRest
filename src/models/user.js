@@ -16,7 +16,15 @@ const userSchema = new mongooseSchema.Schema({
     "roles": [{
         "ref": "role",
         "type": mongooseSchema.Schema.Types.ObjectId
-    }]
+    }],
+    "warn": {
+        "type": Number,
+        "default": 0
+    },
+    "enable":{
+        "type": Boolean,
+        "default": true
+    }
 },{
     "timestamps": true,
     "versionkey": false
@@ -29,5 +37,5 @@ userSchema.statics.encryptPassword = async (password) => {
 userSchema.statics.comparePassword = async (password, recevedPassword) => {
     return await bcrypt.compare(password, recevedPassword)
 }
-mongooseSchema.model("user",userSchema);
-module.exports = {mongooseSchema}
+const user = mongooseSchema.model("user",userSchema);
+module.exports = {user}

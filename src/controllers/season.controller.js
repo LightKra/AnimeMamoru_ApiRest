@@ -9,6 +9,7 @@ const createSeason = async (req, res) => {
     ratings,
     lenguages,
     poster_path} = req.body;
+    
     const seasonResult = await season.find({title});
     const size = Object.keys(seasonResult).length;
     if(size>0){
@@ -49,6 +50,6 @@ const searchSeasonAll = async (req, res)=>{
 const deleteSeasonById = async (req, res)=>{
     const _id = req.params.id;
     await season.findByIdAndDelete(_id);
-    messageResult(res, 201, "Delete Season id=" + _id);
+    messageResult(res, 201, "delete Season id=" + _id);
 }
 module.exports = {createSeason, updateSeasonById, searchSeasonById, searchSeasonAll, deleteSeasonById}

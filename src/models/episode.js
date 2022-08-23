@@ -1,8 +1,8 @@
 const mongooseSchema = require('mongoose');
 const episodeSchema = new mongooseSchema.Schema({
-    "espisode_ref": {
+    "season_ref": {
         "type": mongooseSchema.Schema.Types.ObjectId,
-        "ref": "season_ref"
+        "ref": "season"
     },
     "title": {
         "type": String,

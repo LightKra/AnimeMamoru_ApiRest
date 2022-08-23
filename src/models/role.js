@@ -7,5 +7,5 @@ const roleSchema = mongooseSchema.Schema({
 },{
     "versionKey": false
 });
-mongoseSchema.model("Role", roleSchema);
-module.exports = {mongoseSchema}
+const role = mongooseSchema.model("roles", roleSchema);
+module.exports = {role}
