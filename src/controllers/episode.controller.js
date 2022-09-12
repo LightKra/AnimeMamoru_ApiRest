@@ -8,16 +8,10 @@ const createEpisode = async (req, res)=>{
             url_play,
             url_download} = req.body;
     const _id = req.params.id;
-    const result = episode.find({title});
-    const size = Object.keys(result).length;
-    if(size>0){
-         messageResult(res, 201, "Episode already exists");
-    }else{
-        const newEpisode = new episode({"season_ref": convertStringToObjectId(_id), title, description, ratings,
+    const newEpisode = new episode({"season_ref": convertStringToObjectId(_id), title, description, ratings,
         poster_path, url_play, url_download});
-        await newEpisode.save();
-        messageResult(res, 201, "Saved Episode");
-    }
+    await newEpisode.save();
+    messageResult(res, 201, "Saved Episode");
 }
 
 const updateEpisodeById = async (req, res)=>{

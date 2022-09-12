@@ -9,19 +9,11 @@ const createSeason = async (req, res) => {
     ratings,
     lenguages,
     poster_path} = req.body;
-    
-    const seasonResult = await season.find({title});
-    const size = Object.keys(seasonResult).length;
-    if(size>0){
-        messageResult(res, 201, "season already exists");
-    }else{
-        const newSeason = new season({title, description, number_Episodes, date,
+    const newSeason = new season({title, description, number_Episodes, date,
         genres, ratings, lenguages, poster_path
-        })
-        await newSeason.save();
-        messageResult(res, 201, "saved Season");
-    }
-    
+        });
+    await newSeason.save();
+    messageResult(res, 201, "saved Season");
 }
 const updateSeasonById = async (req, res)=>{
     const {title,

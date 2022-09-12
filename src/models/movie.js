@@ -14,16 +14,16 @@ const movieSchema = new mongooseSchema.Schema({
         "required": true
     },
     "url_play":{
-        "mega": String,
-        "fembed": String,
-        "ok_ru": String
+        "option_1": String,
+        "option_2": String,
+        "option_3": String,
+        "option_4": String
     },
     "url_download":{
-        "mega": String,
-        "mediafire": String,
-        "google_drive": String,
-        "zippyshare": String,
-        "icloud_drive": String
+        "option_1": String,
+        "option_2": String,
+        "option_3": String,
+        "option_4": String
     }
 },{
     "timestamps": true,
