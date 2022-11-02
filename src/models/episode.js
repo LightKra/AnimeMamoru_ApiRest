@@ -8,12 +8,19 @@ const episodeSchema = new mongooseSchema.Schema({
         "type": String,
         "required": true
     },
-    "chapter number":{
+    "chapter_number":{
         "type": Number,
         "default": 0
     },
-    "description": String,
+    "description":{
+        "type": String,
+        "required": true
+    },
     "ratings": Number,
+    "page":{
+        "type": Number,
+        "default": 0
+    },
     "poster_path": {
         "type": String,
         "required": true
@@ -35,4 +42,5 @@ const episodeSchema = new mongooseSchema.Schema({
     "versionKey": false
 });
 const episode = mongooseSchema.model('episode',episodeSchema);
+
 module.exports = {episode}

@@ -1,6 +1,5 @@
 const https = require('https');
 const {messageResult} = require('../libs/functions');
-const {season} = require('../models/season');
 const validationTitle = (req, res, next)=>{
     const title = req.body.title;
     const sizeTitle = title ? title.length : 0;
@@ -59,18 +58,14 @@ const validateUrlJsonPlay = (req, res, next)=>{
      messageResult(res, 201, 'invalid download url');
     }
 }
-
-const checkTitleDuplicate = async (req, res, next)=>{
-    const title = req.body.title;
-    const seasonResult = await season.find({title});
-    const size = Object.keys(seasonResult).length;
-    if(size>0){
-        messageResult(res, 201, "season already exists");
-    }else{
+const validationlandScapePosterPath = (req, res, next)=>{
+    const poster_path = req.body.poster_path;
+    if(checkValidUrl(poster_path)){
         next();
+    }else{
+        return messageResult(res, 200, 'invalid poster path');
     }
 }
-
 //funciones no exportadas
 const checkValidUrl = (url)=>{
     let stateUrl = false;
@@ -88,4 +83,4 @@ const validateWebPageResponse = async (url)=>{
     }
 }
 
-module.exports = {validationTitle, validationDescription, validationRatings, validationPosterPath, checkValidUrl, validateUrlJsonDownload, validateUrlJsonPlay, checkTitleDuplicate}
+module.exports = {validationTitle, validationDescription, validationRatings, validationPosterPath, validationlandScapePosterPath, checkValidUrl, validateUrlJsonDownload, validateUrlJsonPlay}

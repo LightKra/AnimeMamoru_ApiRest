@@ -17,7 +17,7 @@
     "peliculas",
     "anime"
   ],
-  "author": "enfermedadMntal",
+  "author": "lightKra",
   "license": "ISC",
   "devDependencies": {
     "@babel/cli": "^7.18.6",

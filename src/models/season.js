@@ -4,13 +4,36 @@ const seasonSchema = new mongooseSchema.Schema({
         "type": String,
         "required": true
     },
-    "description": String,
+    "description": {
+        "type": String,
+        "required": true
+    },
     "number_episodes": Number,
-    "date": String,
-    "genres": [],
-    "ratings": Number,
-    "lenguages": [],
+    "year": {
+        "type": String,
+        "required": true
+    },
+    "genres": {
+        "type": Array,
+        "required": true
+    },
+    "ratings": {
+        "type": Number,
+        "default": 0
+    },
+    "lenguages": {
+        "type": Array,
+        "required": true
+    },
+    "page":{
+        "type": Number,
+        "default": 0
+    },
     "poster_path": {
+        "type": String,
+        "required": true
+    },
+    "landScapePoster_path": {
         "type": String,
         "required": true
     },

@@ -17,6 +17,10 @@ const userSchema = new mongooseSchema.Schema({
         "ref": "role",
         "type": mongooseSchema.Schema.Types.ObjectId
     }],
+    "page":{
+        "type": Number,
+        "default": 0
+    },
     "warn": {
         "type": Number,
         "default": 0

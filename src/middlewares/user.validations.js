@@ -1,6 +1,7 @@
 const {messageResult} = require('../libs/functions');
 const {user} = require('../models/user');
-
+const {role} = require('../models/role');
+const {Api400Error} = require('../libs/error/api400Error');
 const validationUser = (req, res, next)=>{
     const user = req.body.user_name;
     const sizeUser = user ? user.length : 0;
@@ -10,15 +11,53 @@ const validationUser = (req, res, next)=>{
         return messageResult(res, 200, 'invalid user');
     }
 }
-const checkValidRolUser =(req, res, next) =>{
+const checkValidRol = async (req, res, next) =>{
     const rol = req.body.roles;
-    let stateRol = false;
+    let stateRol = true;
     if(!rol) return messageResult(res, 201, 'invalid rol');
-    if(rol.length > 0 && rol.length < 2){
-        rol[0]=="user" ? stateRol = true :  '';
+    let roles;
+    await role.find({"_id": {$in : rol}}).then(newRoles=>{
+        roles = newRoles || {"name": ""};
+    }).catch(error =>{
+        throw new Api400Error('role error');
+    })
+    let arrayRoles = [];
+    if(!Array.isArray(roles)){
+        arrayRoles.push(roles);
+    }else{
+        arrayRoles = roles;
+    }
+    newRoles = []
+    arrayRoles.forEach(rol =>{
+        if(rol.name != 'user' || rol.name != 'admin' || rol.name != 'root' || rol.name != 'moderator'){
+            stateRol = false;
+        }
+    });
+    if(!stateRol){
+        next();
     }else{
         return messageResult(res, 201, 'invalid rol');
     }
+}
+const checkValidRolUser = async (req, res, next) =>{
+    const rol = req.body.roles;
+    let stateRol = false;
+    if(!rol) return messageResult(res, 201, 'invalid rol');
+    let roles;
+    await role.find({"_id": {$in : rol}}).then(newRoles=>{
+        roles = newRoles || {"name": ""};
+    }).catch(error =>{
+        throw new Api400Error('role error');
+    })
+    let arrayRoles = [];
+    if(!Array.isArray(roles)){
+        arrayRoles.push(roles);
+    }else{
+        arrayRoles = roles;
+    }
+    arrayRoles.forEach(rol=>{
+        rol.name == 'user' ? stateRol = true : '';
+    })
     if(stateRol){
         next();
     }else{
@@ -59,7 +98,7 @@ const checkUserDuplicatePut = async (req, res ,next) => {
     }
 }
 const checkUserDuplicatePutForRoot = async (req, res ,next) => {
-    const _id = req.body._id;
+    const _id = req.params.id;
     const user_name = req.body.user_name;
     const email = req.body.email;
     const resultUser = await user.findOne({_id});
@@ -106,4 +145,4 @@ const checkValidPassword = (req, res, next) =>{
 }
 
 
-module.exports = {checkValidEmail, checkValidPassword, checkValidRolUser, validationUser, checkUserDuplicate, checkUserDuplicatePut, checkUserDuplicatePutForRoot}
+module.exports = {checkValidEmail, checkValidPassword, checkValidRol, validationUser, checkUserDuplicate, checkUserDuplicatePut, checkUserDuplicatePutForRoot, checkValidRolUser}

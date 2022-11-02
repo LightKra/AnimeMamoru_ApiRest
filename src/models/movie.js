@@ -4,12 +4,35 @@ const movieSchema = new mongooseSchema.Schema({
         "type": String,
         "required": true
     },
-    "description": String,
-    "date": String,
-    "genres": [],
-    "ratings": Number,
-    "lenguages": [],
+    "description":{
+        "type": String,
+        "required": true
+    },
+    "year": {
+        "type": String,
+        "required": true
+    },
+    "genres": {
+        "type": Array,
+        "required": true
+    },
+    "ratings": {
+        "type": Number,
+        "default": 0
+    },
+    "lenguages": {
+        "type": Array,
+        "required": true
+    },
+    "page":{
+        "type": Number,
+        "default": 0
+    },
     "poster_path": {
+        "type": String,
+        "required": true
+    },
+    "landScapePoster_path": {
         "type": String,
         "required": true
     },

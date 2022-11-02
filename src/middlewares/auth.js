@@ -2,6 +2,7 @@ const {role} = require('../models/role');
 const {user} = require('../models/user');
 const {messageResult} = require('../libs/functions');
 const jwt = require('jsonwebtoken');
+const {Api400Error} = require('../libs/error/api404Error');
 const config = require('../config');
 const verifyToken = async (req, res, next) => {
     try{
