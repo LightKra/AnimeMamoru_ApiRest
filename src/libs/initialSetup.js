@@ -25,6 +25,7 @@ const createDefaultRoot = async ()=>{
             const roles = await role.find({"name": {$in: ["user", "moderator", "admin", "root"]}});
             let newRoles = [];
             roles.forEach((role) => {newRoles.push(role._id)});
+            console.log(newRoles);
             const userRoot = {
                 "user_name": "root",
                 "email": "root@root.com",

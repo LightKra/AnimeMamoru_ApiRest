@@ -58,14 +58,60 @@ const validateUrlJsonPlay = (req, res, next)=>{
      messageResult(res, 201, 'invalid download url');
     }
 }
-const validationlandScapePosterPath = (req, res, next)=>{
-    const poster_path = req.body.poster_path;
-    if(checkValidUrl(poster_path)){
+const validationlandScapePosterPath = async (req, res, next)=>{
+    const landScapePoster_path = req.body.landScapePoster_path;
+    if(checkValidUrl(landScapePoster_path)){
         next();
     }else{
-        return messageResult(res, 200, 'invalid poster path');
+        return messageResult(res, 200, 'invalid land Scape Poster path');
     }
 }
+const validationYear = async (req, res, next) =>{
+    const year = parseInt(req.body.year);
+    if(year > 1917){
+        next();
+    }else{
+        return messageResult(res, 200, 'invalid year')
+    }
+}
+const validationGenres = async (req, res, next)=>{
+    const arrayGenres = ["shounen","shoujo","seinen","josei","kodomo","shoujo-ai","yuri","bishoujo","moe","yaoi","bishounen","kemono","mecha","ecchi","gender-bender","hentai","gore","slice-of-life","aniparo","escolar","harem","deportes","isekai","reencarnación","súperpoderes","misterio","psicológico","drama","romance"];
+    const reqGenres = req.body.genres;
+    let countGenres = 0;
+    const sizeReqGenres = reqGenres.length;
+    if(sizeReqGenres > 0 && sizeReqGenres < 6){
+        reqGenres.forEach(genre =>{
+            arrayGenres.forEach(x=>{
+                if(x.toLowerCase() == genre.toLowerCase()){
+                    countGenres++;
+                }       
+            });
+        });
+    countGenres == sizeReqGenres ? next() : messageResult(res, 200, 'invalid genres');
+    }else{
+        return messageResult(res, 200, 'invalid genres');
+    }
+}
+const validationLenguages = async (req, res, next)=>{
+    const arrayLenguages = ["es","spa","en","eng"];
+    const reqLenguages = req.body.lenguages;
+    const sizeReqLenguages = reqLenguages.length;
+    let countLenguages = 0;
+    if(sizeReqLenguages > 0 && sizeReqLenguages < 6){
+        reqLenguages.forEach(lenguage =>{
+            arrayLenguages.forEach(x =>{
+                if(x.toLowerCase() == lenguage.toLowerCase()){
+                    countLenguages++;
+                }
+            });
+        });
+    countLenguages == sizeReqLenguages ? next() : messageResult(res, 200, 'invalid lenguages');
+    }else{
+        return messageResult(res, 200, 'invalid lenguages');
+    }
+
+}
+
 //funciones no exportadas
 const checkValidUrl = (url)=>{
     let stateUrl = false;
@@ -83,4 +129,4 @@ const validateWebPageResponse = async (url)=>{
     }
 }
 
-module.exports = {validationTitle, validationDescription, validationRatings, validationPosterPath, validationlandScapePosterPath, checkValidUrl, validateUrlJsonDownload, validateUrlJsonPlay}
+module.exports = {validationTitle, validationDescription, validationRatings, validationPosterPath, validationlandScapePosterPath, validationYear, validationGenres, validationLenguages, checkValidUrl, validateUrlJsonDownload, validateUrlJsonPlay}

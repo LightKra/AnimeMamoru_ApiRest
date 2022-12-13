@@ -11,10 +11,10 @@ const createSeason = async (req, res) => {
             lenguages,
             poster_path,
             landScapePoster_path} = req.body;
-            const countEpisodes = await season.estimatedDocumentCount();
-            const latestEpisode = await season.find().sort({"_id": -1}).limit(1);
-            if(latestEpisode.length == 0) latestEpisode.push({"page":0});
-            const page = countRegistration(countEpisodes, latestEpisode[0].page);
+            const countSeasons = await season.estimatedDocumentCount();
+            const latestSeason = await season.find().sort({"_id": -1}).limit(1);
+            if(latestSeason.length == 0) latestSeason.push({"page":0});
+            const page = countRegistration(countSeasons, latestSeason.page);
             const newSeason = new season({title, description, number_Episodes, year,
                 genres, ratings, lenguages, page, poster_path, landScapePoster_path
                 });
@@ -45,7 +45,7 @@ const updateSeasonById = async (req, res)=>{
 }
 const searchSeasonById = async (req, res)=>{
     try{
-        const _id = req.params.id;
+        const _id = req.params.search;
         const search = await season.find({_id});
         messageResultJson(res, search);
     }catch(error){

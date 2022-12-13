@@ -3,7 +3,7 @@ const Router = require('express');
 const auth = require('../middlewares/auth');
 const validations = require('../middlewares/season.validations');
 const seasonRouter = Router();
-seasonRouter.post('/',[auth.verifyToken, auth.isRolAdmin || auth.isRolRoot, validations.validationTitle, validations.checkTitleDuplicate, validations.validationDescription, validations.validationRatings, validations.validationPosterPath, validations.validationlandScapePosterPath],function(req, res){
+seasonRouter.post('/',[auth.verifyToken, auth.isRolAdmin || auth.isRolRoot, validations.validationTitle, validations.checkTitleDuplicate, validations.validationDescription, validations.validationRatings, validations.validationPosterPath, validations.validationlandScapePosterPath, validations.validationYear, validations.validationGenres, validations.validationLenguages],function(req, res){
     seasonController.createSeason(req, res);
 });
 seasonRouter.get('/page/:search',function(req, res){

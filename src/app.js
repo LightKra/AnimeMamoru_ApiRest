@@ -20,8 +20,9 @@ app.get('/api', (req, res) => {
     });
 });
 createRoles();
-createDefaultRoot();
-
+setTimeout(function(){
+  createDefaultRoot();
+}, 5000);
 app.use('/api/season',seasonRouter);
 app.use('/api/movie',movieRouter);
 app.use('/api/episode',episodeRouter);

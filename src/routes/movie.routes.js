@@ -3,7 +3,7 @@ const movieRouter = Router();
 const movieController = require('../controllers/movie.controller');
 const auth = require('../middlewares/auth');
 const validations = require('../middlewares/movie.validations');
-movieRouter.post('/', [auth.verifyToken, auth.isRolAdmin || auth.isRolRoot, validations.validationTitle, validations.checkTitleDuplicate,validations.validationDescription, validations.validationRatings, validations.validationPosterPath, validations.validationlandScapePosterPath, validations.validateUrlJsonDownload, validations.validateUrlJsonPlay], function(req, res){
+movieRouter.post('/', [auth.verifyToken, auth.isRolAdmin || auth.isRolRoot, validations.validationTitle, validations.checkTitleDuplicate, validations.validationlandScapePosterPath, validations.validationYear, validations.validationGenres, validations.validationLenguages, validations.validationDescription, validations.validationRatings, validations.validationPosterPath, validations.validateUrlJsonDownload, validations.validateUrlJsonPlay], function(req, res){
     movieController.createMovie(req, res);
 });
 movieRouter.get('/page/:search',function(req, res){

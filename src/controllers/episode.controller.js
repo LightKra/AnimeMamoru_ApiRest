@@ -12,7 +12,7 @@ const createEpisode = async (req, res)=>{
         const countEpisodes = await episode.estimatedDocumentCount();
         const latestEpisode = await episode.find().sort({"_id": -1}).limit(1);
         if(latestEpisode.length == 0) latestEpisode.push({"page":0});
-        const page = countRegistration(countEpisodes, latestEpisode[0].page);
+        const page = countRegistration(countEpisodes, latestEpisode.page);
         const _id = req.params.id;
         const newEpisode = new episode({"season_ref": convertStringToObjectId(_id), title, chapter_number, description, ratings, page,
             poster_path, url_play, url_download});
@@ -95,7 +95,7 @@ const deleteEpisodeById = async (req, res)=>{
     try{
         const _id = req.params.id;
         await episode.findByIdAndDelete(_id);
-        messageResult(res, 201, "delete Episode Id="+ _id);
+        messageResult(res, 201, "delete Episode Id: "+ _id);
     }catch(error){
         console.log(error);
     }

@@ -2,15 +2,20 @@ const {user} = require('../models/user');
 const {role} = require('../models/role');
 const jwt = require('jsonwebtoken');
 const config = require('../config');
-const {messageResult, messageResultJson} = require('../libs/functions');
+const {messageResult, messageResultJson, countRegistration} = require('../libs/functions');
 const createUser = async (req, res)=>{
     try{
         let {user_name, email, password, roles} = req.body;
+        const countUsers = await user.estimatedDocumentCount();
+        const latestUser = await user.find().sort({"_id": -1}).limit(1);
+        if(latestUser.length==0) latestUser.push({"page": 0});
+        const page = countRegistration(countUsers, latestUser.page);
         const newUser = new user({
             user_name,
             email,
             "password": await user.encryptPassword(password),
-            roles
+            roles,
+            page
         });
         const savedUser = await newUser.save();
         const token = jwt.sign({"id": savedUser._id},config.SECRET,{
@@ -60,36 +65,47 @@ const updateUserById = async (req, res) =>{
         console.log(error);
     }
 }
-
-const searchUserById = async (req, res)=>{
-    try{
-        const _id = req.params.id;
-        const searchUser = await user.findByIdAndUpdate({_id});
-        messageResultJson(res, searchUser);
-    }catch(error){
-        console.log(error);
-    }
-}
-
-const searchUserAll =async (req, res) =>{
-    try{
-        const searchAll = await user.find({});
-        messageResultJson(res, searchAll);
-    }catch(error){
-        console.log(error);
-    }
-}
-
 const deleteUserById = async (req, res)=>{
     try{
         const _id = req.params.id;
-        await user.findByIdAndDelete({_id});
-        messageResult(res, 201, 'user deleted');
+        const userRoot = await user.find({_id});
+        const rolRoot = await role.find({"name": "root"});
+        let state = false;
+        userRoot[0].roles.forEach(rol=>{
+            if(rol.toString() === rolRoot[0]._id.toString()){
+                state = true;
+            }
+        });
+        if(state){
+            messageResult(res, 201, 'Root account cannot be deleted');
+        }else{
+            await user.findByIdAndDelete({_id});
+            messageResult(res, 201, 'user deleted');
+        }
+
     }catch(error){
         console.log(error);
     }
 }
 //options root
+const searchUserByIdForAdminModeratorRoot = async (req, res)=>{
+    try{
+        const _id = req.params.id;
+        const searchUser = await user.find({_id});
+        messageResultJson(res, searchUser);
+    }catch(error){
+        console.log(error);
+    }
+}
+const searchUserAllForAdminModeratorRoot =async (req, res) =>{
+    try{
+        const page = req.params.page;
+        const searchAll = await user.find({page});
+        messageResultJson(res, searchAll);
+    }catch(error){
+        console.log(error);
+    }
+}
 const updateUserByIdForRoot = async (req, res) =>{
     try{
         const {user_name, email, password, roles} = req.body;
@@ -106,9 +122,9 @@ const updateUserByIdForRoot = async (req, res) =>{
     }
     
 }
-const bannedUserByIdForAdminModeratorRoot = async (req, res)=>{
+const bannedUserByIdForAdminRoot = async (req, res)=>{
     try{
-        const _id = req.params._id;
+        const _id = req.params.id;
         await user.findByIdAndUpdate(_id,{"enable": false});
         messageResult(res, 201, 'banned user');
     }catch(error){
@@ -118,14 +134,15 @@ const bannedUserByIdForAdminModeratorRoot = async (req, res)=>{
 
 const warnUserByIdForAdminModeratorRoot = async (req, res)=>{
     try{
-        const _id = req.params._id;
-        let warns = await user.find({_id}).warn;
-        if(warns=>0 && warns <=3){
+        const _id = req.params.id;
+        let resultUser = await user.find({_id});
+        let warns = resultUser[0].warn;
+        if(warns>=0 && warns <=3){
             warns++;
             await user.findByIdAndUpdate(_id,{"warn": warns});
             messageResult(res, 201, `warns = ${warns}`);
         }else{
-            await user.findByIdAndUpdate(_id,{"enable": false});
+            await user.findByIdAndUpdate(_id,{"warn": 0,"enable": false});
             messageResult(res, 201, 'banned user');
         }
     }catch(error){
@@ -134,11 +151,11 @@ const warnUserByIdForAdminModeratorRoot = async (req, res)=>{
 }
 const removeWarningsAndEnableUserByIdForAdminModeratorRoot = async (req, res)=>{
     try{
-        const _id = req.params._id;
-        await user.findByIdAndUpdate(_id,{"warn": 0, "enable": false});
+        const _id = req.params.id;
+        await user.findByIdAndUpdate(_id,{"warn": 0, "enable": true});
         messageResult(res, 201, 'warning and ban removed');
     }catch(error){
         console.log(error);
     }
 }
-module.exports = {createUser, updateUserById, searchUserById, searchUserAll, deleteUserById, bannedUserByIdForAdminModeratorRoot, warnUserByIdForAdminModeratorRoot, removeWarningsAndEnableUserByIdForAdminModeratorRoot, updateUserByIdForRoot, signin, logout}
+module.exports = {createUser, updateUserById, searchUserByIdForAdminModeratorRoot, searchUserAllForAdminModeratorRoot, deleteUserById, bannedUserByIdForAdminRoot, warnUserByIdForAdminModeratorRoot, removeWarningsAndEnableUserByIdForAdminModeratorRoot, updateUserByIdForRoot, signin, logout}

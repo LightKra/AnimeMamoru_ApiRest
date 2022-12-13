@@ -143,6 +143,14 @@ const checkValidPassword = (req, res, next) =>{
         return messageResult(res, 200, 'invalid password');
     }
 }
-
+const CheckIdentityConfirmation = async (req, res, next) => {
+    try{
+        const _id = req.params.id;
+        userName = await user.find(_id).user_name;
+        
+    }catch(error){
+        console.log(error);
+    }
+}
 
 module.exports = {checkValidEmail, checkValidPassword, checkValidRol, validationUser, checkUserDuplicate, checkUserDuplicatePut, checkUserDuplicatePutForRoot, checkValidRolUser}

@@ -13,10 +13,10 @@ const createMovie = async (req, res)=>{
             landScapePoster_path,
             url_play,
             url_download} = req.body;
-        const countEpisodes = await movie.estimatedDocumentCount();
-        const latestEpisode = await movie.find().sort({"_id": -1}).limit(1);
-        if(latestEpisode.length==0) latestEpisode.push({"page": 0});
-        const page = countRegistration(countEpisodes, latestEpisode.page);
+        const countMovies = await movie.estimatedDocumentCount();
+        const latestMovie = await movie.find().sort({"_id": -1}).limit(1);
+        if(latestMovie.length==0) latestMovie.push({"page": 0});
+        const page = countRegistration(countMovies, latestMovie.page);
         const newMovie = new movie({title, description, year, genres, ratings, lenguages, page,
             poster_path, landScapePoster_path, url_play, url_download});
         await newMovie.save();

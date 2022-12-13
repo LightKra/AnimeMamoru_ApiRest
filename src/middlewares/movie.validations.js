@@ -6,9 +6,10 @@ generalValidations.checkTitleDuplicate = async (req, res, next)=>{
     const seasonResult = await movie.find({title});
     const size = Object.keys(seasonResult).length;
     if(size>0){
-        messageResult(res, 201, "season already exists");
+        messageResult(res, 201, "movie already exists");
     }else{
         next();
     }
 }
+
 module.exports = generalValidations;
